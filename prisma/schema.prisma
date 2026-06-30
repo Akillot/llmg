@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  title     String   @default("New conversation")
+  createdAt DateTime @default(now())
+  branches  Branch[]
+}
+
+model Branch {
+  id              String       @id @default(cuid())
+  conversationId  String
+  name            String       @default("main")
+  forkedFromMsgId String?
+  headMessageId   String?
+  createdAt       DateTime     @default(now())
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  messages        Message[]
+}
+
+model Message {
+  id              String   @id @default(cuid())
+  branchId        String
+  parentMessageId String?
+  role            String
+  content         String
+  createdAt       DateTime @default(now())
+  branch          Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  parent          Message? @relation("MessageTree", fields: [parentMessageId], references: [id])
+  children        Message[] @relation("MessageTree")
+}
