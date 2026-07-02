@@ -41,7 +41,7 @@ export default function TreePanel({
 }) {
   if (!branches.length) {
     return (
-      <div className="flex-1 flex items-center justify-center text-zinc-600 text-xs">
+      <div className="flex-1 flex items-center justify-center text-white/22 text-xs">
         no branches
       </div>
     );
@@ -87,7 +87,7 @@ export default function TreePanel({
                   key={`vl-${bi}-${mi}`}
                   x1={cx} y1={nodeTop(bi, mi) + NH}
                   x2={cx} y2={nodeTop(bi, mi + 1)}
-                  stroke="#3f3f46"
+                  stroke="rgba(255,255,255,0.15)"
                   strokeWidth={1.5}
                 />
               );
@@ -110,10 +110,10 @@ export default function TreePanel({
               <path
                 key={`fork-${bi}`}
                 d={`M ${srcCx} ${srcBottomY} L ${srcCx} ${midY} L ${dstCx} ${midY} L ${dstCx} ${dstTopY}`}
-                stroke="#10b981"
+                stroke="rgba(255,255,255,0.4)"
                 strokeWidth={1.5}
                 fill="none"
-                opacity={0.55}
+                opacity={1}
               />
             );
           })}
@@ -132,13 +132,13 @@ export default function TreePanel({
                 style={{ position: "absolute", top: 4, height: HH - 8, width: BW }}
                 className={`flex items-center gap-1.5 px-2 rounded text-xs font-medium transition-colors ${
                   isActive
-                    ? "bg-emerald-900/40 text-emerald-400 border border-emerald-800/50"
-                    : "bg-zinc-800/50 text-zinc-400 border border-zinc-700/30 hover:border-zinc-600 hover:text-zinc-300"
+                    ? "bg-white/10 text-white border border-white/20"
+                    : "bg-white/[0.07] text-white/45 border border-white/[0.07] hover:border-white/20 hover:text-white/65"
                 }`}
               >
-                <GitBranch size={9} className={isActive ? "text-emerald-400" : "text-zinc-500"} />
+                <GitBranch size={9} className={isActive ? "text-white" : "text-white/35"} />
                 <span className="flex-1 text-left truncate">{branch.name}</span>
-                {isActive && <span className="text-[9px] text-emerald-700">HEAD</span>}
+                {isActive && <span className="text-[9px] text-white/30">HEAD</span>}
               </button>
 
               {/* Message nodes */}
@@ -151,26 +151,26 @@ export default function TreePanel({
                     style={{ position: "absolute", top: nodeTop(bi, mi), width: BW, height: NH }}
                     className={`rounded border px-2 py-1.5 text-[10px] leading-tight ${
                       isUser
-                        ? "bg-zinc-800 border-zinc-700 text-zinc-300"
-                        : "bg-zinc-900/80 border-zinc-800 text-zinc-400"
-                    } ${isHead ? "ring-1 ring-emerald-500/40" : ""}`}
+                        ? "bg-white/10 border-white/15 text-white/65"
+                        : "bg-white/[0.06] border-white/10 text-white/45"
+                    } ${isHead ? "ring-1 ring-white/20" : ""}`}
                   >
                     <div className="flex items-center gap-1 mb-0.5">
                       <span
                         className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                          isHead ? "bg-emerald-400" : isUser ? "bg-zinc-500" : "bg-zinc-700"
+                          isHead ? "bg-white" : isUser ? "bg-zinc-500" : "bg-white/15"
                         }`}
                       />
-                      <span className="text-zinc-600">{isUser ? "you" : "ai"}</span>
+                      <span className="text-white/22">{isUser ? "you" : "ai"}</span>
                       {msg.tag && (
-                        <span className="flex items-center gap-0.5 text-amber-400/70 ml-1">
+                        <span className="flex items-center gap-0.5 text-white/35 ml-1">
                           <Tag size={7} />
                           <span className="truncate max-w-[50px]">{msg.tag}</span>
                         </span>
                       )}
-                      {isHead && <span className="ml-auto text-[9px] text-emerald-700">head</span>}
+                      {isHead && <span className="ml-auto text-[9px] text-white/30">head</span>}
                     </div>
-                    <div className="text-zinc-400 line-clamp-2 leading-relaxed">
+                    <div className="text-white/45 line-clamp-2 leading-relaxed">
                       {msg.content.slice(0, 90)}
                     </div>
                   </div>

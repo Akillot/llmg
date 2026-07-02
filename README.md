@@ -1,49 +1,49 @@
 # llmg
 
-> Git-style version control for AI conversations.
+ChatGPT owns your conversation history. You can't branch it, diff it, or store it next to your code. When the AI loses the plot 20 messages in, you start over.
 
-Most chat interfaces give you a single linear thread. llmg treats every message as a commit — you can branch at any point, roll back to an earlier state, diff two parallel conversations, cherry-pick individual messages across threads, and merge branches with AI synthesis. When you're done, export the entire conversation tree as a real git repository.
+**llmg** is a self-hosted AI chat with git-style branching. Your conversations live in a local SQLite database. Fork at any message, roll back when the AI goes wrong, export the entire conversation tree as a real git repository.
 
+```bash
+npm run export-git
+# Every branch becomes a git branch.
+# Every message becomes a git commit.
+# git log --oneline --graph --all
 ```
-main ─── msg1 ─── msg2 ─── msg3 ─── msg4 (HEAD)
-                    │
-                    └─ feature ─── msg3' ─── msg4' ─── msg5' (HEAD)
-```
+
+> Open source. MIT. Self-hosted.  
+> Your AI history stays on your machine — forever.
 
 ---
 
-## Features
+## What you can do
 
-### Message operations
+### With messages — click to open the action menu
 
 | Action | What it does |
 |---|---|
-| **Fork** | Create a new branch from any message. The AI inherits the full conversation history up to that point. |
-| **Rollback** | Revert the branch HEAD to an earlier message. Later messages become invisible to the AI but remain in the database. |
-| **Extract** | Start a clean branch from one message with no prior context — useful for isolating a topic that drifted in mid-conversation. |
-| **Reply** | Quote a specific message (or a text selection from any AI response) when writing your next message. The AI receives the quote as explicit context. |
+| **Fork** | Create a new branch from any message. The AI inherits full history up to that point. |
+| **Rollback** | Revert the branch to an earlier message. Later messages become invisible to the AI but stay in the database. |
+| **Extract** | Start a clean branch from one message with no prior context — isolates a topic that drifted mid-conversation. |
+| **Reply** | Quote a specific message or a text selection. The AI receives the quote as explicit context. |
+| **Tag** | Attach a color-coded label. Tagged messages are pinned into the system prompt on every subsequent call — the AI always sees them regardless of rollbacks or long thread depth. |
+| **Checkpoint** | Generate an AI summary of everything up to this point. Future calls start from the summary, saving tokens on long threads. |
 | **Forward** | Send any message to a different branch or conversation. |
-| **Tag** | Attach a color-coded label to any message. Tagged messages are automatically promoted to high-priority pinned context and injected into every subsequent AI call in that branch. |
-| **Checkpoint** | Generate a compressed AI summary of everything up to a given message. Future calls start from the summary instead of the full history, saving tokens on long threads. |
-| **Copy** | Copy any message text to the clipboard. |
 
-### Branch operations
-
-Hover over any branch in the sidebar to reveal its actions:
+### With branches — hover to reveal
 
 | Action | What it does |
 |---|---|
-| **Diff** | Compare two branches side-by-side: shows shared messages (common ancestor) and the unique messages in each branch. |
+| **Diff** | Compare two branches side-by-side: shared messages and what diverged. |
 | **Cherry-pick** | Copy a single message from another branch into the current one. |
-| **Merge** | Prompt the AI to synthesize two branches into a single coherent response. |
-| **Delete** | Remove a branch. If it's the last branch in a conversation, the conversation is deleted. |
+| **Merge** | Prompt the AI to synthesize two branches into one coherent response. |
 
 ### Workspace
 
-- **Stash** — save the current branch state under a name and restore it at any time, like `git stash`
-- **Custom instructions** — set a global system prompt, a per-conversation prompt, or inherit instructions from another conversation
-- **Branch tree** — a visual graph of all branches and fork connections for the active conversation
-- **Export** — download the full conversation tree (all branches) as JSON and Markdown; or run `npm run export-git` to get a real git repository where each message is a commit
+- **Stash** — save and restore branch states by name (`git stash`)
+- **Custom instructions** — global system prompt, per-conversation, or inherited from another conversation
+- **Branch tree** — visual graph of all branches and fork connections
+- **Export** — download the full conversation tree as JSON and Markdown
 
 ---
 
@@ -55,15 +55,19 @@ git clone https://github.com/YOUR_USERNAME/llmg.git
 cd llmg
 ```
 
-**2. Configure your AI provider**
+**2. Add your API key**
 ```bash
 cp .env.example .env.local
-# Add one of the keys below
+# Edit .env.local — add GROQ_API_KEY (free at console.groq.com)
 ```
 
-**3. Install and run**
+**3. Install**
 ```bash
 npm install
+```
+
+**4. Run**
+```bash
 npm run dev
 ```
 
@@ -71,41 +75,21 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## AI provider configuration
+## AI provider
 
 llmg auto-detects the provider from environment variables. Only one key is needed.
 
 | Provider | Variable | Default model | Notes |
 |---|---|---|---|
-| **Groq** *(default)* | `GROQ_API_KEY` | `llama-3.3-70b-versatile` | Free tier available at [console.groq.com](https://console.groq.com) |
+| **Groq** *(default)* | `GROQ_API_KEY` | `llama-3.3-70b-versatile` | Free tier at [console.groq.com](https://console.groq.com) |
 | **OpenAI** | `OPENAI_API_KEY` | `gpt-4o-mini` | — |
-| **Ollama** | `OLLAMA_HOST` *(optional)* | `llama3.2` | Fully local, no API key required |
+| **Ollama** | `OLLAMA_HOST` *(optional)* | `llama3.2` | Fully local, no key required |
 
-Override the model or force a specific provider:
+Override the model or force a provider:
 ```bash
 AI_MODEL=gpt-4o
 AI_PROVIDER=openai   # groq | openai | ollama
 ```
-
----
-
-## How tagging affects LLM context
-
-When you tag a message, it is pinned into the system prompt on every subsequent AI call in that branch:
-
-```
-[Pinned messages — high priority context]
-
-#Very useful [assistant]:
-<tagged message content>
-
----
-
-#Key constraint [user]:
-<another tagged message>
-```
-
-This means the model always has access to your most important messages regardless of rollbacks, checkpoints, or long thread depth.
 
 ---
 
@@ -115,13 +99,15 @@ This means the model always has access to your most important messages regardles
 npm run export-git
 ```
 
-Output lands in `./exports/`. Each conversation becomes a directory, each branch becomes a git branch, and each message becomes a commit with its original timestamp as the author date.
+Each conversation becomes a directory. Each branch becomes a git branch. Each message becomes a commit with its original timestamp.
 
 ```bash
 cd exports/my-conversation-abc123
 git log --oneline --graph --all
 git diff main..experiment -- conversation.md
 ```
+
+ChatGPT won't ship this. Exporting your history to a format that works without them is not in their interest.
 
 ---
 
@@ -145,11 +131,11 @@ git diff main..experiment -- conversation.md
 
 ## Tech stack
 
-- [Next.js 16](https://nextjs.org) — App Router, React Server Components
+- [Next.js 16](https://nextjs.org) App Router
 - [Prisma 7](https://www.prisma.io) + SQLite via `@prisma/adapter-better-sqlite3`
-- [Tailwind CSS v4](https://tailwindcss.com) — CSS-first configuration
-- [Groq](https://groq.com) / [OpenAI](https://openai.com) / [Ollama](https://ollama.com) — via OpenAI-compatible API
-- [react-markdown](https://github.com/remarkjs/react-markdown) — AI response rendering
+- [Tailwind CSS v4](https://tailwindcss.com)
+- Groq / OpenAI / Ollama via OpenAI-compatible API
+- [react-markdown](https://github.com/remarkjs/react-markdown)
 
 ---
 

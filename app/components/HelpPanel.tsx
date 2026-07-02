@@ -170,7 +170,7 @@ const scenarios: Scenario[] = [
 const TAG_COLORS: { id: string; label: B; cls: string }[] = [
   { id: "amber",   label: { en: "Yellow",  ru: "Жёлтый"     }, cls: "bg-amber-400/20 text-amber-300" },
   { id: "blue",    label: { en: "Blue",    ru: "Синий"       }, cls: "bg-blue-400/20 text-blue-300" },
-  { id: "emerald", label: { en: "Green",   ru: "Зелёный"     }, cls: "bg-emerald-400/20 text-emerald-300" },
+  { id: "emerald", label: { en: "Green",   ru: "Зелёный"     }, cls: "bg-white/20 text-emerald-300" },
   { id: "red",     label: { en: "Red",     ru: "Красный"     }, cls: "bg-red-400/20 text-red-300" },
   { id: "violet",  label: { en: "Purple",  ru: "Фиолетовый"  }, cls: "bg-violet-400/20 text-violet-300" },
 ];
@@ -186,10 +186,10 @@ export default function HelpPanel({ lang }: { lang: Lang }) {
         {/* Header */}
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <GitBranch size={16} className="text-emerald-400" />
-            <h1 className="text-base font-bold text-zinc-100">llmg — {l === "en" ? "Git for AI chats" : "Git для AI-чатов"}</h1>
+            <GitBranch size={16} className="text-white" />
+            <h1 className="text-base font-bold text-white">llmg — {l === "en" ? "Git for AI chats" : "Git для AI-чатов"}</h1>
           </div>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-white/35">
             {l === "en"
               ? "Every message is a commit. Every branch is an isolated context. The AI only sees its own branch history."
               : "Каждое сообщение — коммит. Каждая ветка — изолированный контекст. ИИ видит только историю своей ветки."}
@@ -198,20 +198,20 @@ export default function HelpPanel({ lang }: { lang: Lang }) {
 
         {/* Scenarios */}
         <div>
-          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+          <h2 className="text-xs font-semibold text-white/45 uppercase tracking-wider mb-3">
             {l === "en" ? "Usage examples" : "Примеры использования"}
           </h2>
           <div className="space-y-3">
             {scenarios.map((s) => (
-              <div key={s.title.en} className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
+              <div key={s.title.en} className="rounded-lg border border-white/10 bg-white/[0.04] p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base">{s.emoji}</span>
-                  <span className="text-xs font-medium text-zinc-200">{s.title[l]}</span>
+                  <span className="text-xs font-medium text-white/80">{s.title[l]}</span>
                 </div>
                 <ol className="space-y-0.5">
                   {s.steps.map((step, i) => (
-                    <li key={i} className="flex items-start gap-1.5 text-[11px] text-zinc-500">
-                      <ChevronRight size={9} className="mt-0.5 shrink-0 text-zinc-700" />
+                    <li key={i} className="flex items-start gap-1.5 text-[11px] text-white/35">
+                      <ChevronRight size={9} className="mt-0.5 shrink-0 text-white/14" />
                       {step[l]}
                     </li>
                   ))}
@@ -224,20 +224,20 @@ export default function HelpPanel({ lang }: { lang: Lang }) {
         {/* Sections */}
         {sections.map((section) => (
           <div key={section.title.en}>
-            <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-1">
+            <h2 className="text-xs font-semibold text-white/45 uppercase tracking-wider mb-3 flex items-center gap-1">
               <MousePointer size={9} /> {section.title[l]}
             </h2>
             <div className="space-y-1">
               {section.items.map((item) => (
-                <div key={item.name} className="flex items-start gap-3 rounded-md px-3 py-2 hover:bg-zinc-800/40 transition-colors">
-                  <span className="text-zinc-500 mt-0.5 shrink-0">{item.icon}</span>
+                <div key={item.name} className="flex items-start gap-3 rounded-md px-3 py-2 hover:bg-white/[0.06] transition-colors">
+                  <span className="text-white/35 mt-0.5 shrink-0">{item.icon}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-xs font-medium text-zinc-200">{item.label[l]}</span>
-                      <code className="text-[10px] text-zinc-600 bg-zinc-800 px-1 rounded">{item.name}</code>
+                      <span className="text-xs font-medium text-white/80">{item.label[l]}</span>
+                      <code className="text-[10px] text-white/22 bg-white/10 px-1 rounded">{item.name}</code>
                     </div>
-                    <p className="text-[11px] text-zinc-500 leading-relaxed">{item.desc[l]}</p>
-                    <p className="text-[10px] text-zinc-700 mt-0.5">→ {item.how[l]}</p>
+                    <p className="text-[11px] text-white/35 leading-relaxed">{item.desc[l]}</p>
+                    <p className="text-[10px] text-white/14 mt-0.5">→ {item.how[l]}</p>
                   </div>
                 </div>
               ))}
@@ -247,7 +247,7 @@ export default function HelpPanel({ lang }: { lang: Lang }) {
 
         {/* Tag colors reference */}
         <div>
-          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+          <h2 className="text-xs font-semibold text-white/45 uppercase tracking-wider mb-3">
             {l === "en" ? "Tag colors" : "Цвета тегов"}
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -257,7 +257,7 @@ export default function HelpPanel({ lang }: { lang: Lang }) {
               </span>
             ))}
           </div>
-          <p className="text-[11px] text-zinc-600 mt-2">
+          <p className="text-[11px] text-white/22 mt-2">
             {l === "en" ? "Click a tag on any message to change its color or label." : "Кликни на тег в сообщении чтобы изменить цвет или метку."}
           </p>
         </div>
