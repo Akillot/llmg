@@ -7,21 +7,29 @@ datasource db {
 }
 
 model Conversation {
-  id        String   @id @default(cuid())
-  title     String   @default("New conversation")
-  createdAt DateTime @default(now())
-  branches  Branch[]
+  id                String   @id @default(cuid())
+  title             String   @default("New conversation")
+  instructions      String?
+  inheritFromConvId String?
+  createdAt         DateTime @default(now())
+  branches          Branch[]
+}
+
+model GlobalSetting {
+  key   String @id
+  value String @default("")
 }
 
 model Branch {
-  id              String       @id @default(cuid())
+  id              String   @id @default(cuid())
   conversationId  String
-  name            String       @default("main")
+  name            String   @default("main")
   forkedFromMsgId String?
   headMessageId   String?
-  createdAt       DateTime     @default(now())
+  createdAt       DateTime @default(now())
   conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   messages        Message[]
+  stashes         Stash[]
 }
 
 model Message {
@@ -30,8 +38,23 @@ model Message {
   parentMessageId String?
   role            String
   content         String
-  createdAt       DateTime @default(now())
+  tag               String?
+  tagColor          String?
+  forwardedFrom     String?
+  replyToId         String?
+  isCheckpoint      Boolean  @default(false)
+  checkpointSummary String?
+  createdAt         DateTime @default(now())
   branch          Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
   parent          Message? @relation("MessageTree", fields: [parentMessageId], references: [id])
   children        Message[] @relation("MessageTree")
+}
+
+model Stash {
+  id            String   @id @default(cuid())
+  branchId      String
+  headMessageId String
+  name          String
+  createdAt     DateTime @default(now())
+  branch        Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
 }
